@@ -1,6 +1,7 @@
 <?php
 session_start();
 include '../includes/db.php';
+include 'includes/navbar.php';
 
 $result = $conn->query("SELECT * FROM master_register ORDER BY timestamp DESC");
 ?>

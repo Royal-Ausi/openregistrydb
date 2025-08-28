@@ -1,6 +1,7 @@
 <!-- dashboardAdmin.php -->
 <?php
 include 'includes/db.php';
+include 'includes/navbar.php';
 
 // $result2 = $conn->query("SELECT created_by, timestamp FROM master_register ORDER BY timestamp DESC LIMIT 1");
 // $row2 = $result2->fetch_assoc();
@@ -41,7 +42,7 @@ if ($row2) {
       margin: 0;
       font-family: Arial, sans-serif;
     }
-    .navbar {
+    /* .navbar {
       background-color: #b57526ff;
       color: white;
       display: flex;
@@ -59,7 +60,7 @@ if ($row2) {
       font-size: 24px;
       cursor: pointer;
       color: white;
-    }
+    } */
     .sidebar {
       height: 100vh;
       width: 220px;
@@ -122,12 +123,6 @@ if ($row2) {
 </head>
 <body>
 
-   <!-- Top Navbar -->
-  <nav class="navbar">
-    <span class="menu-toggle" onclick="toggleSidebar()">☰</span>
-    <span class="navbar-brand mx-auto text-white">Open Registry Admin</span>
-  </nav>
-
   <!-- Sidebar Drawer -->
   <div class="sidebar" id="sidebar">
     <a href="#">Dashboard</a>
@@ -136,7 +131,7 @@ if ($row2) {
     <a href="#">View Database</a>
     <a href="#">Manage Templates</a>
     <a href="#">Settings</a>
-    <a href="#">Logout</a>
+    <a href="adminLogin.php">Logout</a>
   </div>
 
   <!-- Main Content -->

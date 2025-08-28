@@ -18,9 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $update = $conn->prepare("UPDATE users SET password = ? WHERE username = ?");
     $update->bind_param("ss", $new, $username);
     $update->execute();
-    echo "✅ Password changed successfully.";
+    echo "Password changed successfully.";
   } else {
-    echo "❌ Incorrect current password.";
+    echo "Incorrect current password.";
   }
 }
 

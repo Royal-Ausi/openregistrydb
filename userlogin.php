@@ -1,39 +1,4 @@
 <?php
- 
-
-
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//   $username = trim($_POST["username"]);
-//   $password = $_POST["password"];
-
-//   $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-//   $stmt->bind_param("s", $username);
-//   $stmt->execute();
-//   $result = $stmt->get_result();
-//   $user = $result->fetch_assoc();
-
-//   if ($result->num_rows === 1) {
- 
-
-//     if (password_verify($password, $user["password"])) {
-//       // Login success
-//       session_start();
-//       $_SESSION["username"] = $user["username"];
-//       $_SESSION["assigned_modules"] = $modules;
-//       $_SESSION["module"] = $user["assigned_module"];
-//       $_SESSION["role"] = $user["role"];
-//       header("Location: user_dashboard.php");
-//       exit();
-//     } else {
-//       $error = "❌ Incorrect password.";
-//     }
-//   } else {
-//     $error = "❌ Username not found.";
-//   }
-// <?php
-// include 'includes/db.php';
-
-// $
 
 include 'includes/db.php';
 $error = "";
@@ -48,30 +13,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $result = $stmt->get_result();
 
   if ($result->num_rows === 1) {
-    $user = $result->fetch_assoc(); // ✅ Fetch user first
-
+    $user = $result->fetch_assoc();
     if (password_verify($password, $user["password"])) {
-      // ✅ Login success
       session_start();
       $_SESSION["username"] = $user["username"];
       $_SESSION["role"] = $user["role"];
-
-      // ✅ Handle assigned modules
-      $modules = explode(",", $user["assigned_module"]); // Split by comma
+      $modules = explode(",", $user["assigned_module"]);
       $_SESSION["assigned_modules"] = $modules;
-
-      // ✅ Optional: store first module as default
       $_SESSION["module"] = $modules[0];
-
       header("Location: user_dashboard.php");
       exit();
     } else {
-      echo "❌ Incorrect password.";
+      $error = "Incorrect password, Please Try Again";
     }
   } else {
-    echo "❌ Username not found.";
+    $error = "Username not found.";
   }
-
   $stmt->close();
 }
 ?>
@@ -102,27 +59,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       border: none;
       width: 100%;
     }
+    .password-wrapper {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #b57526ff;
+      font-size: 1.2em;
+      cursor: pointer;
+      padding: 0;
+    }
   </style>
 </head>
 <body>
 
   <div class="login-box">
     <h4 class="mb-3">User Login</h4>
-    <?php if (!empty($error)): ?>
-      <div class="alert alert-danger"><?= $error ?></div>
-    <?php endif; ?>
     <form method="POST" action="">
       <div class="mb-3">
         <label>Username</label>
         <input type="text" name="username" class="form-control" required>
       </div>
-      <div class="mb-3">
+      <div class="mb-3 password-wrapper">
         <label>Password</label>
-        <input type="password" name="password" class="form-control" required>
+        <input type="password" name="password" id="passwordInput" class="form-control" required>
+        <button type="button" class="toggle-password" tabindex="-1" onclick="togglePassword()">
+          &#128065;
+        </button>
       </div>
-      <button type="submit" class="btn custom-login-btn"  >Login</button>
+      <button type="submit" class="btn custom-login-btn">Login</button>
+      <?php if (!empty($error)): ?>
+        <div class="alert alert-danger mt-3"><?= $error ?></div>
+      <?php endif; ?>
     </form>
   </div>
 
+  <script>
+    function togglePassword() {
+      const input = document.getElementById('passwordInput');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+  </script>
 </body>
 </html>

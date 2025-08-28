@@ -1,11 +1,12 @@
 <?php
 session_start();
 include 'includes/db.php';
+include 'includes/navbar.php';
 
-if (!isset($_SESSION["username"])) {
-    header("Location: userlogin.php");
-    exit();
-}
+// if (!isset($_SESSION["username"])) {
+//     header("Location: userlogin.php");
+//     exit();
+// }
 
 $username = $_SESSION["username"];
 $module = $_SESSION["module"];
@@ -20,6 +21,7 @@ $totalEdits = 17; // Replace with real count via SQL
   <meta charset="UTF-8">
   <title>User Dashboard - Open Registry</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     body {
       margin: 0;
@@ -27,7 +29,7 @@ $totalEdits = 17; // Replace with real count via SQL
       font-family: Arial, sans-serif;
     }
 
-    .navbar {
+    /* .navbar {
       background-color: #b57526ff;
       color: white;
       height: 56px;
@@ -46,7 +48,7 @@ $totalEdits = 17; // Replace with real count via SQL
       font-size: 24px;
       cursor: pointer;
       color: white;
-    }
+    } */
 
     .sidebar {
       height: 100vh;
@@ -109,30 +111,64 @@ $totalEdits = 17; // Replace with real count via SQL
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Navbar
   <nav class="navbar">
     <span class="menu-toggle" onclick="toggleSidebar()">☰</span>
     <span class="navbar-brand mx-auto text-white">Open Registry User</span>
-  </nav>
+
+    <!-- Back Button 
+    <button class="btn btn-outline-light" onclick="history.back()" style="margin-left: auto;">
+      ← Back
+    </button>
+  </nav> -->
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <a href="#">Dashboard</a>
-    <a href="editRedirect.php">Edit Database (<?= $module ?>)</a>
-    <a href="modules/masterRegister_edit.php" class="btn btn-outline-primary"><strong>Edit Register</strong></a>
+    <a href="user_dashboard.php">Dashboard</a>
+    <!-- <a href="editRedirect.php">Edit Database (<?= $module ?>)</a> -->
+    <a href="#" id="editRegisterLink" class="nav-link">Edit Register</a>
+    
     <!-- <a href="viewDatabase.php">View Database </a> -->
-    <a href="#" id="viewDatabaseLink" class="nav-link">📄 View Database</a>
+    <a href="viewDatabase.php" class="nav-link">View Database</a>
     
       <!-- <li class="nav-item">
     <a class="nav-link" href="viewDatatabase.php">
-      📄 View Database
+      View Database
     </a> -->
 
     </li>
-    <a href="#">View Database - Meeting Minutes</a>
-    <a href="#">View Database - Financial Records</a>
-    <a href="#">Logout</a>
+    <a href="userlogin.php">Logout</a>
   </div>
+
+  <!-- Edit Register Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form id="editForm" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Start Editing</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label for="selectedRegister">Select Register</label>
+        <select id="selectedRegister" class="form-select mb-3" required>
+          <option value="master_register">Master Register</option>
+          <option value="incoming_mail">Incoming Mail</option>
+          <option value="pensioners_register">Pensioners Register</option>
+          <option value="semicurrent_records">Semi-Current Records</option>
+          <option value="contractstaff_register">Contract Staff Register</option>
+          <option value="file_diary">File Diary</option>
+         
+        </select>
+
+        <label for="rowCount">Number of Rows</label>
+        <input type="number" id="rowCount" class="form-control" min="1" required>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Create Table</button>
+      </div>
+    </form>
+  </div>
+</div>
 
   <!-- Main Content -->
   <div class="main-content">
@@ -157,68 +193,26 @@ $totalEdits = 17; // Replace with real count via SQL
     <div id="tableContainer"></div>
   </div>
 
-  <div class="modal fade" id="viewModal" tabindex="-1">
-    <div class="modal-dialog">
-      <form id="viewForm" class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Select Register to View</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <select id="selectedTable" class="form-select" required>
-            <option value="master_register">Master Register</option>
-            <option value="pensioners_register">Pensioners Register</option>
-            <option value="incoming_mail">Incoming Mail</option>
-            <option value="contractstaff_register">Contract Staff Register</option>
-            <option value="semicurrent_records">Semi-Current Records</option>
-            <option value="file_diary">File Diary</option>
-          </select>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">View Register</button>
-        </div>
-      </form>
-    </div>
-  </div>
+
 
     <!-- Script -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script>
-    // Blur effect
-    const body = document.querySelector("body");
-    const modal = new bootstrap.Modal(document.getElementById("viewModal"));
+  
+    <script>
+  const editModal = new bootstrap.Modal(document.getElementById("editModal"));
+  document.getElementById("editRegisterLink").addEventListener("click", function(e) {
+    e.preventDefault();
+    editModal.show();
+  });
 
-    // Trigger modal from sidebar
-    document.getElementById("viewDatabaseLink").addEventListener("click", function(e) {
-      e.preventDefault();
-      body.classList.add("blurred");
-      modal.show();
-    });
-
-    // Remove blur when modal closes
-    document.getElementById("viewModal").addEventListener("hidden.bs.modal", function () {
-      body.classList.remove("blurred");
-    });
-
-    // Handle form submission
-    document.getElementById("viewForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const tableName = document.getElementById("selectedTable").value;
-      modal.hide();
-
-      fetch("fetch_table.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ table: tableName })
-      })
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("tableContainer").innerHTML = html;
-      });
-    });
-    </script> -->
-
+  document.getElementById("editForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const table = document.getElementById("selectedRegister").value;
+    const rows = document.getElementById("rowCount").value;
+    window.location.href = `edit_register.php?table=${table}&rows=${rows}`;
+  });
+</script>
     <style>
       .main-content.blurred,
       .sidebar.blurred {
@@ -227,38 +221,6 @@ $totalEdits = 17; // Replace with real count via SQL
       }
     </style>
     <script>
-    const mainContent = document.querySelector(".main-content");
-    const sidebar = document.querySelector(".sidebar");
-    const modal = new bootstrap.Modal(document.getElementById("viewModal"));
-
-    document.getElementById("viewDatabaseLink").addEventListener("click", function(e) {
-      e.preventDefault();
-      mainContent.classList.add("blurred");
-      sidebar.classList.add("blurred");
-      modal.show();
-    });
-
-    document.getElementById("viewModal").addEventListener("hidden.bs.modal", function () {
-      mainContent.classList.remove("blurred");
-      sidebar.classList.remove("blurred");
-    });
-
-    document.getElementById("viewForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const tableName = document.getElementById("selectedTable").value;
-      modal.hide();
-
-      fetch("fetch_table.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ table: tableName })
-      })
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("tableContainer").innerHTML = html;
-      });
-    });
-
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('active');
