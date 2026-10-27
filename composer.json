@@ -1,0 +1,19 @@
+{
+    "name": "openregistrydb/excel-export",
+    "description": "Open Registry Database with Excel Export functionality",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "phpoffice/phpspreadsheet": "^1.29"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenRegistryDB\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
+

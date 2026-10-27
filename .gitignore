@@ -1,0 +1,10 @@
+config.php
+includes/system_admin.local.php
+includes/images/
+uploads/*
+!uploads/.gitkeep
+vendor/
+*.log
+.vscode/installed.lock
+
+installed.lock

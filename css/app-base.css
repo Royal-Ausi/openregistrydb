@@ -1,0 +1,59 @@
+
+:root {
+    --app-focus-ring: rgba(224, 141, 60, 0.35);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    line-height: 1.5;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 0.35rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #E08D3C;
+    box-shadow: 0 0 0 0.2rem var(--app-focus-ring);
+}
+
+.form-text {
+    color: #444;
+}
+
+.card {
+    border-color: #e8e8e8;
+}
+
+.btn:focus-visible {
+    box-shadow: 0 0 0 0.2rem var(--app-focus-ring);
+}
+
+.table {
+    --bs-table-border-color: #e5e5e5;
+}
+
+.modal-content {
+    border-radius: 0.5rem;
+    border-color: #e5e5e5;
+}
+
+.modal-header {
+    border-bottom-color: #eee;
+}
+
+.modal-footer {
+    border-top-color: #eee;
+}
+
+.alert {
+    border-radius: 0.5rem;
+}
